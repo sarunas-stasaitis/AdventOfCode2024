@@ -12,6 +12,10 @@ class Matrix (
     var height: Int
         private set
 
+    fun size() : Point {
+        return Point(width, height)
+    }
+
     init {
         this.width = width
         this.height = height    }
@@ -39,6 +43,8 @@ class Matrix (
     var matrix = Array(width) { Array(height) { '0' } }
 
     operator fun get(x: Int, y: Int) = matrix[x][y]
+
+    operator fun get(point: Point) = get(point.x, point.y)
 
     fun relativeGet(x: Int, y: Int, dx: Int, dy: Int): Char {
         return matrix[x + dx][y + dy]
@@ -199,7 +205,11 @@ class Matrix (
         }
     }
 
-    data class Cell(val x: Int, val y: Int, val value: Char)
+    data class Cell(val x: Int, val y: Int, val value: Char) {
+
+        fun point() = Point(x, y)
+
+    }
 
 
 }

@@ -15,4 +15,22 @@ enum class CardinalDirection4 {
         this.dy = dy
     }
 
+    fun cw() : CardinalDirection4 {
+        return when(this) {
+            N -> E
+            E -> S
+            S -> W
+            W -> N
+        }
+    }
+
+    fun ccw() : CardinalDirection4 {
+        return when(this) {
+            N -> W
+            W -> S
+            S -> E
+            E -> N
+        }
+    }
+
 }

@@ -63,6 +63,14 @@ data class Point(val x: Int, val y: Int) : Comparable<Point> {
         return Point(x + dir.dx, y + dir.dy)
     }
 
+    operator fun minus(other: Point): Point {
+        return Point(x - other.x, y - other.y)
+    }
+
+    operator fun minus(dir: CardinalDirection4): Point {
+        return Point(x - dir.dx, y - dir.dy)
+    }
+
     override fun compareTo(other: Point): Int {
         return if (y != other.y) {
             y.compareTo(other.y)
