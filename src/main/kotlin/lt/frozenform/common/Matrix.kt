@@ -58,6 +58,10 @@ class Matrix (
         matrix[x][y] = value
     }
 
+    operator fun set(point: Point, value: Char) {
+        set(point.x, point.y, value)
+    }
+
     fun neighbours(cell: Cell): Matrix = neighbours(cell.x, cell.y)
 
     fun neighbours(x: Int, y: Int) : Matrix {
