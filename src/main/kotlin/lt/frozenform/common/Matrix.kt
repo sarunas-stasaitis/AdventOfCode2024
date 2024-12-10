@@ -1,8 +1,10 @@
 package lt.frozenform.common
 
+import lt.frozenform.common.CardinalDirection4.*
 import java.io.PrintStream
+import java.util.EnumMap
 
-class Matrix (
+class Matrix(
     width: Int,
     height: Int
 ) : Iterable<Matrix.Cell> {
@@ -12,13 +14,14 @@ class Matrix (
     var height: Int
         private set
 
-    fun size() : Point {
+    fun size(): Point {
         return Point(width, height)
     }
 
     init {
         this.width = width
-        this.height = height    }
+        this.height = height
+    }
 
     companion object {
         fun fromLines(lines: List<String>): Matrix {
@@ -64,16 +67,35 @@ class Matrix (
 
     fun neighbours(cell: Cell): Matrix = neighbours(cell.x, cell.y)
 
-    fun neighbours(x: Int, y: Int) : Matrix {
+    fun neighbours(x: Int, y: Int): Matrix {
         return doSubmatrix(x - 1, y - 1, 3, 3)
+    }
+
+    fun neighbours(point: Point): Matrix = neighbours(point.x, point.y)
+
+    fun neighbours4(pos: Point): EnumMap<CardinalDirection4, Cell> {
+        val map = EnumMap<CardinalDirection4, Cell>(CardinalDirection4::class.java)
+
+        for (dir in CardinalDirection4.entries) {
+            val dirPos = pos + dir
+            if (contains(dirPos)) {
+                this[dirPos].let { map[dir] = Cell(dirPos, it) }
+            }
+        }
+
+        return map
     }
 
     fun submatrix(x: Int, y: Int, width: Int, height: Int): Matrix {
         var rWidth = width
         var rHeight = height
 
-        val rx = if (x < 0) {rWidth--;0} else x
-        val ry = if (y < 0) {rHeight--;0} else y
+        val rx = if (x < 0) {
+            rWidth--;0
+        } else x
+        val ry = if (y < 0) {
+            rHeight--;0
+        } else y
 
         if (rx + rWidth > this.width) rWidth = this.width - rx
         if (ry + rHeight > this.height) rHeight = this.height - ry
@@ -91,7 +113,7 @@ class Matrix (
         return submatrix
     }
 
-    fun copy() : Matrix {
+    fun copy(): Matrix {
         val copy = Matrix(width, height)
         for (y in 0 until height) {
             for (x in 0 until width) {
@@ -105,15 +127,15 @@ class Matrix (
         return matrix.map { it[y] }.toTypedArray()
     }
 
-    fun rows() : Iterable<Array<Char>> {
-        return (0 until  height).map { row(it) }
+    fun rows(): Iterable<Array<Char>> {
+        return (0 until height).map { row(it) }
     }
 
     fun column(x: Int): Array<Char> {
         return matrix[x]
     }
 
-    fun cols() : Iterable<Array<Char>> {
+    fun cols(): Iterable<Array<Char>> {
         return (0 until width).map { column(it) }
     }
 
@@ -128,7 +150,7 @@ class Matrix (
         return diag.toTypedArray()
     }
 
-    fun diagsLR() : Iterable<Array<Char>> {
+    fun diagsLR(): Iterable<Array<Char>> {
         return (0 until width + height - 1).map { diagLR(it) }
     }
 
@@ -143,7 +165,7 @@ class Matrix (
         return diag.toTypedArray()
     }
 
-    fun diagsRL() : Iterable<Array<Char>> {
+    fun diagsRL(): Iterable<Array<Char>> {
         return (0 until width + height - 1).map { diagRL(it) }
     }
 
@@ -211,7 +233,13 @@ class Matrix (
 
     data class Cell(val x: Int, val y: Int, val value: Char) {
 
+        constructor(point: Point, value: Char) : this(point.x, point.y, value)
+
         fun point() = Point(x, y)
+
+        fun digitValue(): Int {
+            return value.digitToInt()
+        }
 
     }
 
