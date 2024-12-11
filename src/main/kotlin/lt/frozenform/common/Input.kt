@@ -16,6 +16,15 @@ class Input(private val glue: Class<*>) : Iterable<String> {
         return Seq.seq(this)
     }
 
+    fun onlyLine(): String {
+        val it = iterator()
+        val line = it.next()
+        if (it.hasNext()) {
+            throw IllegalStateException("The more then one line here")
+        }
+        return line
+    }
+
     private class InputIterator(private val glue: Class<*>) : Iterator<String> {
 
         private val scanner: Scanner = Scanner(glue.getResourceAsStream("input.txt"))
